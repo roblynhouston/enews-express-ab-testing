@@ -24,7 +24,7 @@ E-News Express wanted to determine whether a redesigned landing page could incre
 |---|---|---|
 | More time on new page? | One-sided t-test **p = 0.000139** | Statistically significant evidence of greater engagement |
 | Higher conversion on new page? | One-sided two-proportion z-test **p = 0.00803** | Statistically significant evidence of higher conversion |
-| Conversion differs by preferred language? | **See validation note below** | The original chi-square calculation needs correction before its p-value is reported |
+| Conversion differs by preferred language? | **Corrected p = 0.2130** | No statistically significant association detected at α = 0.05 |
 | Time on new page differs by language? | Notebook concludes no statistically significant difference | See notebook for ANOVA details |
 
 These results describe the **sample experiment**, not measured production uplift after a rollout.
@@ -36,14 +36,17 @@ These results describe the **sample experiment**, not measured production uplift
 - Investigate additional conversion drivers such as device type and traffic source.
 
 ## Repository contents
-- [`ENews_Express_Analysis.ipynb`](ENews_Express_Analysis.ipynb): Original analysis, code, visualizations and conclusions
+- [`ENews_Express_Analysis.ipynb`](ENews_Express_Analysis.ipynb): Analysis, code, visualizations and corrected chi-square test
 - `requirements.txt`: Python package dependencies
+- `abtest.csv`: Educational project dataset (100 observations)
 
 ## Reproducing the analysis
-The original notebook reads `abtest.csv` from a Google Drive path. **The dataset is not included** in this repository package. To rerun the analysis, obtain a dataset you are authorized to share/use and update the notebook's data-loading path. Notebook outputs are retained for review.
+1. Download the notebook, `abtest.csv`, and `requirements.txt` into the same folder.
+2. Install packages using `pip install -r requirements.txt`.
+3. Open the notebook in Jupyter and run all cells in order. If using Google Colab, upload `abtest.csv` into the session first.
 
-## Validation note before publication
-The original notebook constructs the conversion-by-language contingency table with `margins=True` and passes that table to `chi2_contingency`. This includes a totals row and column in the statistical test and **is not the correct independence test**. Recompute using `pd.crosstab(df['language_preferred'], df['converted'])` (without margins), and update the corresponding conclusion before presenting that p-value publicly. The original notebook is preserved without silently changing its work. Also review embedded images, external links, dataset permissions and notebook outputs before making the repository public.
+## Statistical validation
+The original chi-square calculation included contingency-table totals, which are not valid inputs for the test. The notebook now uses the observed 3 × 2 table without margins. **Corrected χ² = 3.0930, df = 2, p = 0.2130.** At α = 0.05, we fail to reject independence; there is insufficient evidence of an association between language preference and conversion. This is not proof of independence. The original analysis otherwise remains intact; rerun the notebook to refresh any saved outputs.
 
 ## Context
 This is a data science learning project, presented as a portfolio case study; recommendations are analytical proposals, not claims of real-world implementation.
